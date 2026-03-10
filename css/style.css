@@ -571,12 +571,14 @@ body {
 
 .labeled-image img {
     width: 100%;
-    max-width: 260px;
-    height: auto;
+    max-width: 240px;
+    height: 200px;
+    object-fit: contain;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-soft);
     border: 1px solid var(--color-border);
     transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    background: var(--color-bg-warm);
 }
 
 .labeled-image img:hover {
