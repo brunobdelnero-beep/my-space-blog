@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Management Exam (Hard Mode)</title>
+    <style>
+        :root {
+            --primary: #b91c1c; /* Dark Red for Hard Mode */
+            --success: #15803d;
+            --error: #991b1b;
+            --background: #f3f4f6;
+            --card: #ffffff;
+            --text: #111827;
+        }
+
+        body {
+            font-family: 'Georgia', serif; /* Serif font for academic feel */
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background-color: var(--card);
+            border-radius: 4px;
+            border-top: 6px solid var(--primary);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            padding: 2.5rem;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            margin: 0;
+            color: #1f2937;
+        }
+
+        .tag {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: bold;
+            font-family: sans-serif;
+        }
+
+        .progress {
+            font-family: sans-serif;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            padding: 1.25rem;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            position: relative;
+            font-family: sans-serif;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background-color: #fef2f2;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success);
+            background-color: #dcfce7;
+            color: #14532d;
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--error);
+            background-color: #fee2e2;
+            color: #7f1d1d;
+        }
+
+        .footer {
+            margin-top: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: sans-serif;
+        }
+
+        #next-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 2px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: none;
+            font-weight: 600;
+        }
+
+        #next-btn:hover {
+            background-color: #991b1b;
+        }
+
+        .results-view {
+            text-align: center;
+            display: none;
+        }
+
+        .results-score {
+            font-size: 5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 1rem 0;
+            font-family: sans-serif;
+        }
+        
+        .restart-btn {
+            background-color: #374151;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .restart-btn:hover {
+            background-color: #1f2937;
+        }
+
+        .restart-btn.secondary {
+            background-color: #6b7280;
+        }
+
+        .restart-btn.secondary:hover {
+            background-color: #4b5563;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz-box">
+    <div class="header">
+        <div>
+            <h1>Exam 1: Chapters 1-3</h1>
+            <span class="tag">HARD MODE</span>
+        </div>
+        <div class="progress" id="progress">1 / 80</div>
+    </div>
+    
+    <div class="question-text" id="question">Loading...</div>
+    
+    <div class="options-grid" id="options">
+        </div>
+
+    <div class="footer">
+        <div class="score-display">Score: <span id="score">0</span></div>
+        <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
+
+<div class="quiz-container results-view" id="results-box">
+    <h1>Exam Completed</h1>
+    <div class="results-score" id="final-score">0%</div>
+    <p id="final-stats">You got 0 out of 80 correct.</p>
+    <div class="btn-group">
+        <button class="restart-btn" onclick="restartFull()">Retake Full Exam</button>
+        <button class="restart-btn secondary" id="retry-wrong-btn" onclick="retryWrong()">Retry Wrong Questions</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        // CHAPTER 1
+        { q: "1. Which of the following is a coordinated set of actions and commitments that will allow a company to gain a competitive advantage and possibly exploit their core competencies?", o: ["A. Operational tactics", "B. Strategic intent", "C. An integrated Strategy", "D. Visionary leadership", "E. All of the above"], a: 2 },
+        { q: "2. Companies can implement a strategy that their competitors will find difficult with which to compete and it will give them an edge on the competitors, what is that called?", o: ["A. Comparative Parity", "B. Sustainable Competitive Advantage", "C. Market Dominance", "D. Strategic Flexibility", "E. None of the above"], a: 1 },
+        { q: "3. How long does a competitive advantage last?", o: ["A. Indefinitely, if managed well", "B. Until the patent expires", "C. It is not permanent; it has a limited life", "D. 5-10 years on average", "E. As long as the economy is stable"], a: 2 },
+        { q: "4. In order to achieve a competitive advantage across time what must the company do?", o: ["A. Exploit current advantages to maximize today's profit", "B. Utilize resources to build new advantages for the future", "C. Focus exclusively on cost reduction", "D. A and B", "E. All of the above"], a: 3 },
+        { q: "5. What term describes an investor's doubts about the gains and losses that will result from an investment?", o: ["A. Volatility", "B. Beta", "C. Risk", "D. Uncertainty premium", "E. Return on Investment"], a: 2 },
+        { q: "6. If two investments have the same amount of risk, an investor will expect to earn which of the following?", o: ["A. Above-average returns", "B. Risk-adjusted returns", "C. Average returns", "D. Superior returns", "E. Zero returns"], a: 2 },
+        { q: "7. In the strategic management process, what is the firm's first process?", o: ["A. Developing a mission", "B. External Analysis", "C. Internal Analysis", "D. B and C (Analysis of Strategic Inputs)", "E. Implementation"], a: 3 },
+        { q: "8. When a company performs an internal and external analysis, the results are used to do which of the following?", o: ["A. Select and formulate strategies", "B. Determine executive compensation", "C. Conduct a financial audit", "D. Develop marketing materials", "E. All of the above"], a: 0 },
+        { q: "9. A major benefit of digitalization is what?", o: ["A. It reduces the need for human capital", "B. It facilitates the identification and serving of specific customer groups", "C. It guarantees global market share", "D. It eliminates competition", "E. None of the above"], a: 1 },
+        { q: "10. Economies of scale, in the current competitive landscape are not as effective as they once were in terms of helping firms earn above-average returns.", o: ["A. True", "B. False", "C. Only in manufacturing", "D. Only in service industries", "E. Indeterminate"], a: 0 },
+        
+        // CHAPTER 2
+        { q: "11. Which of the following is an example of a hypercompetitive market?", o: ["A. The Fast Food Industry", "B. The Ecommerce Industry", "C. The Consumer Electronics Industry", "D. A and B only", "E. All of the above"], a: 4 },
+        { q: "12. Limited barriers across geographic borders that allow goods, services, people, skills, and ideas to move are called what?", o: ["A. Free Trade Agreements", "B. The Global Economy", "C. International Diversification", "D. Transnational Strategy", "E. Regionalization"], a: 1 },
+        { q: "13. Which of the following is referred to as a tax imposed by the government on goods imported into their country?", o: ["A. Embargo", "B. Tariff", "C. Subsidy", "D. Sanction", "E. Quota"], a: 1 },
+        { q: "14. Which of the following is created by an increased demand for products and services?", o: ["A. An internal strength", "B. An external threat", "C. An external opportunity", "D. A core competency", "E. A barrier to entry"], a: 2 },
+        { q: "15. In today's competitive landscape, only companies capable of meeting, if not exceeding, global standards typically earn which of the following?", o: ["A. Average Returns", "B. Risk-free Returns", "C. Above-Average Returns", "D. Market Parity", "E. All of the above"], a: 2 },
+        { q: "16. What is the term used to describe the risks that a firm can face when competing outside of its domestic markets?", o: ["A. Liability of Foreignness", "B. Exchange Rate Risk", "C. Political Risk", "D. Cultural Distance", "E. All of the above"], a: 0 },
+        { q: "17. Which of the following describes a global supply chain?", o: ["A. A network of firms spanning multiple countries", "B. A system for supplying goods and services globally", "C. A domestic logistics network", "D. A and B", "E. None of the above"], a: 3 },
+        { q: "18. Which of the following is the definition for a global value chain?", o: ["A. Processes to receive raw materials", "B. Processes to add value through manufacturing", "C. Selling the product in a global setting", "D. All of the above", "E. None of the above"], a: 3 },
+        { q: "19. Supply chain problems often cause which of the following?", o: ["A. Increased inventory turnover", "B. Far-reaching product shortages", "C. Decrease in supplier power", "D. Increase in buyer power", "E. All of the above"], a: 1 },
+        { q: "20. Firms that are reducing their participation in global supply chains and global value chains are a part of a trend called what?", o: ["A. Reshoring", "B. De-globalization", "C. Nearshoring", "D. Nationalization", "E. All of the above"], a: 1 },
+        
+        { q: "21. What is technology diffusion?", o: ["A. The speed at which new technologies become available", "B. The rate at which firms choose to adopt new technologies", "C. The cost of technology transfer", "D. A and B", "E. All of the above"], a: 3 },
+        { q: "22. Which of the following is a term used to describe how rapidly and consistently new, information-intensive technologies replace older ones?", o: ["A. Disruptive Innovation", "B. Perpetual Innovation", "C. Radical Innovation", "D. Incremental Innovation", "E. Creative Destruction"], a: 1 },
+        { q: "23. In a firm there are people known as strategic leaders. These people are usually located where in the firm?", o: ["A. Only at the C-level", "B. Only in the strategy department", "C. In different areas and levels of the firm", "D. On the Board of Directors", "E. All of the above"], a: 2 },
+        { q: "24. Which of the following helps a firm define its purpose and answer the fundamental question of what the firm stands for?", o: ["A. The Vision", "B. The Mission", "C. Core Values", "D. The Strategic Plan", "E. A, B, and C"], a: 4 },
+        { q: "25. Which of the following specifies the businesses in which the film intends to compete and the customers it intends to serve?", o: ["A. Vision Statement", "B. Mission Statement", "C. Corporate Charter", "D. Value Proposition", "E. Strategic Intent"], a: 1 },
+        { q: "26. Which of the following means that stakeholders possess different degrees of ability to influence an organization?", o: ["A. Power dynamics", "B. Unequal Dependencies", "C. Stakeholder prioritization", "D. Organizational politics", "E. None of the above"], a: 1 },
+        { q: "27. Internal and external groups have a strong interest in the outcomes that a firm may experience. This group is known as what?", o: ["A. Stockholders", "B. Bondholders", "C. Stakeholders", "D. Shareholders", "E. All of the above"], a: 2 },
+        
+        // EXTERNAL ENVIRONMENT
+        { q: "28. Recognizing trends is step one. Once they have recognized trends, the next step is to do which of the following?", o: ["A. Scanning", "B. Monitoring", "C. Forecasting", "D. Assessing", "E. Evaluating"], a: 1 },
+        { q: "29. Which of the following is concerned with events and trends in the general environment at a point in time?", o: ["A. Scanning", "B. Monitoring", "C. Forecasting", "D. A and B", "E. All of the above"], a: 3 },
+        { q: "30. Why is forecasting demand for new technological products difficult?", o: ["A. Lack of historical data", "B. Trends continually shorten product life cycles", "C. Consumer preferences are static", "D. A and B", "E. None of the above"], a: 1 },
+        { q: "31. European data protection laws have had what effect on Google and Facebook, and even Amazon?", o: ["A. Increased operational efficiency", "B. Highly restrictive laws regarding consumer privacy threaten their business models", "C. Reduced barriers to entry", "D. Enhanced their competitive advantage", "E. None of the above"], a: 1 },
+        { q: "32. National cultural values affect which of the following?", o: ["A. Behavior in organizations", "B. Organizational outcomes", "C. Internationalization strategy", "D. A and B only", "E. All of the above"], a: 4 },
+        { q: "33. What is the sharing economy?", o: ["A. A socialist economic model", "B. A system using IT to link stakeholders to each other", "C. A barter-based system", "D. A corporate philanthropy initiative", "E. None of the above"], a: 1 },
+        { q: "34. What do suppliers do in order to exert power over their competition within an industry?", o: ["A. Increase prices", "B. Reduce product quality", "C. Increase service levels", "D. A and B", "E. All of the above"], a: 3 },
+        { q: "35. The Internet has enabled consumers to ascertain large amounts of information about costs. What has this done to aid consumers?", o: ["A. Reduced their switching costs", "B. Increased their bargaining power", "C. Decreased their buyer power", "D. Increased information asymmetry", "E. A and B"], a: 1 },
+        { q: "36. When customers face few switching costs and substitute prices are lower, which of the following presents a strong threat?", o: ["A. New Entrants", "B. Rivalry", "C. Product Substitutes", "D. Suppliers", "E. Buyers"], a: 2 },
+        { q: "37. Where do firms go to find information about their competitors in order to build a base of Knowledge?", o: ["A. Competitor Intelligence", "B. Industrial Espionage", "C. Insider Trading", "D. Internal Audits", "E. All of the above"], a: 0 },
+        { q: "38. When one is analyzing the general environment, one of the segments involves workforce diversity, which of the segments includes this?", o: ["A. Demographic Segment", "B. Sociocultural Segment", "C. Economic Segment", "D. Political Segment", "E. A and B"], a: 1 },
+        { q: "39. All of the following (threat of new entrants, power of suppliers, power of buyers, product substitutes, rivalry) are known as what?", o: ["A. The General Environment", "B. The Five Forces of Competition", "C. The Industry Environment", "D. B and C", "E. All of the above"], a: 3 },
+        { q: "40. An analysis of the general environment, the industry environment and conditions which will influence profitability for their competitors results in a company creating which of the following?", o: ["A. A Strategy", "B. A Mission", "C. A Vision", "D. A Goal", "E. All of the above"], a: 0 },
+        
+        { q: "41. Which one of the following detects meaning through the ongoing observations of environmental changes and trends?", o: ["A. Scanning", "B. Monitoring", "C. Forecasting", "D. Assessing", "E. Analysis"], a: 1 },
+        { q: "42. Which of the following is a condition in the general environment that, if exploited effectively, helps a company achieve strategic competitiveness?", o: ["A. Strength", "B. Weakness", "C. Opportunity", "D. Threat", "E. Advantage"], a: 2 },
+        { q: "43. One of the following is a condition in the general environment that may hinder a company's efforts to achieve strategic competitiveness, which is correct?", o: ["A. Threat", "B. Weakness", "C. Liability", "D. Risk", "E. Barrier"], a: 0 },
+        { q: "44. When one studies all of the segments in the general environment, he or she is performing which of the following?", o: ["A. Scanning", "B. Monitoring", "C. Forecasting", "D. Assessing", "E. Reviewing"], a: 0 },
+        { q: "45. Using which of the following, companies may identify early signals of potential changes in the general environment?", o: ["A. Scanning", "B. Monitoring", "C. Forecasting", "D. Assessing", "E. All of the above"], a: 0 },
+        { q: "46. Which of the following can serve as a means of importing knowledge about markets and commercializing new technologies?", o: ["A. R&D", "B. Scanning", "C. Monitoring", "D. B and C", "E. All of the above"], a: 3 },
+        { q: "47. Without _____________, the firm has data that may be interesting but of unknown competitive relevance.", o: ["A. Scanning", "B. Monitoring", "C. Forecasting", "D. Assessment", "E. Analysis"], a: 3 },
+        { q: "48. The __________ segment is concerned with a population's size, age structure, geographic distribution, ethnic mix, and income distribution.", o: ["A. Sociocultural", "B. Demographic", "C. Economic", "D. Geographic", "E. Political"], a: 1 },
+        { q: "49. Which of the following refers to the nature and direction of the economy in which a firm competes or may compete?", o: ["A. Monetary Policy", "B. Fiscal Environment", "C. Economic Environment", "D. Global Segment", "E. None of the above"], a: 2 },
+        { q: "50. Which segment was most disrupted to include supply chain disruptions and dramatic reductions in consumer demand (e.g., travel/hospitality)?", o: ["A. Technological", "B. Sociocultural", "C. Economic", "D. Physical", "E. Political"], a: 2 },
+        { q: "51. Why do firms develop a strategy to specify how they will analyze the political/legal Segment?", o: ["A. To manipulate laws", "B. To develop approaches (like lobbying) to deal with opportunities/threats", "C. To avoid compliance", "D. To minimize taxes", "E. All of the above"], a: 1 },
+        { q: "52. The institutions and activities involved in creating new knowledge and translating that knowledge into new outputs operate in which segment?", o: ["A. Educational", "B. Scientific", "C. Technological", "D. Innovation", "E. Industrial"], a: 2 },
+        { q: "53. In the five forces model, why is it important for one to study the threat of new entrants?", o: ["A. They increase industry innovation", "B. They can threaten the market share of existing competitors", "C. They reduce the power of buyers", "D. They increase barriers to entry", "E. All of the above"], a: 1 },
+        
+        // INTERNAL ORGANIZATION
+        { q: "54. How do firms create value?", o: ["A. By maximizing shareholder wealth", "B. By innovatively bundling and leveraging resources", "C. By forming capabilities and core competencies", "D. B and C", "E. All of the above"], a: 3 },
+        { q: "55. Which of the following are assets that are rooted deeply in the firm's history and are difficult for competitors to analyze/imitate?", o: ["A. Tangible Resources", "B. Fixed Assets", "C. Intangible Resources", "D. Human Capital", "E. C and D"], a: 2 },
+        { q: "56. Which of the following is a major problem for Harley-Davidson?", o: ["A. Supply chain shortages", "B. Maintenance of their cult following/intangible resources", "C. The aging of their customer base", "D. B and C", "E. All of the above"], a: 3 },
+        { q: "57. Which of the following allows a firm to develop capabilities through matching employee skills to strategic objectives?", o: ["A. Human Resource Management", "B. Strategic Human Capital", "C. Organizational Development", "D. Talent Management", "E. None of the above"], a: 1 },
+        { q: "58. Which of the following is the purchase of a value-creating activity or a support function activity from an external supplier?", o: ["A. Offshoring", "B. Nearshoring", "C. Outsourcing", "D. Subcontracting", "E. All of the above"], a: 2 },
+        { q: "59. Why is outsourcing an effective tool for many firms?", o: ["A. Few organizations possess all resources to be superior in every activity", "B. It reduces costs", "C. It allows focus on core competencies", "D. A and C", "E. All of the above"], a: 0 },
+        { q: "60. Some firms display very good organizational functions and can utilize which of the following to create competitive advantages?", o: ["A. Core Competencies", "B. Organizational Culture", "C. Strategic flexibility", "D. A and B", "E. All of the above"], a: 3 },
+        
+        { q: "61. Which of the following is the ability to manage an internal organization in ways not dependent on a single country/culture?", o: ["A. International Experience", "B. Global Mind-Set", "C. Cultural Intelligence", "D. Transnational Capability", "E. None of the above"], a: 1 },
+        { q: "62. As firms work to make decisions that prove to be effective, what percentage of those decisions will ultimately fail?", o: ["A. 10%", "B. 25%", "C. 50%", "D. 75%", "E. 90%"], a: 2 },
+        { q: "63. Which of the following is the capability of making successful decisions when no obviously correct model is available?", o: ["A. Intuition", "B. Strategic Analysis", "C. Judgment", "D. Forecasting", "E. Guesswork"], a: 2 },
+        { q: "64. Which of the following can be defined as assets that can be observed and quantified?", o: ["A. Intangible Resources", "B. Tangible Resources", "C. Capabilities", "D. Core Competencies", "E. None of the above"], a: 1 },
+        { q: "65. Which of the following can be considered a tangible resource?", o: ["A. Borrowing capacity", "B. Formal reporting structures", "C. Product inventory", "D. All of the above", "E. None of the above"], a: 3 },
+        { q: "66. Which of the following could be considered an intangible resource?", o: ["A. Brand Name", "B. Trust", "C. Organizational Culture", "D. Knowledge", "E. All of the above"], a: 4 },
+        { q: "67. Which of the following is sometimes hard to leverage?", o: ["A. Intangible Resources", "B. Human Resources", "C. Tangible Resources", "D. Capabilities", "E. Information"], a: 2 },
+        { q: "68. In the global economy, which of the following often plays a more critical role in corporate success than physical assets?", o: ["A. Intellectual Capital", "B. Financial Capital", "C. Market Share", "D. Economies of Scale", "E. All of the above"], a: 0 },
+        { q: "69. Which of the following is an example of a firm's capabilities?", o: ["A. Logistics management", "B. Motivating employees", "C. Effective customer service", "D. Miniaturization", "E. All of the above"], a: 4 },
+        { q: "70. Which of the following are considered the 'crown jewels of a company'?", o: ["A. Proprietary Technology", "B. Core Competencies", "C. Top Management Team", "D. Strategic Assets", "E. None of the above"], a: 1 },
+        
+        { q: "71. Companies utilize which of the following to identify their core competencies?", o: ["A. Value Chain Analysis", "B. VRIN (Valuable, Rare, Inimitable, Nonsubstitutable)", "C. SWOT Analysis", "D. A and B", "E. All of the above"], a: 3 },
+        { q: "72. Which of the following is a criteria of sustainable competitive advantage?", o: ["A. Valuable", "B. Rare", "C. Costly to Imitate", "D. Non-Substitutable", "E. All of the above"], a: 4 },
+        { q: "73. The length of time a firm can expect to create value by using its core competencies is a function of what?", o: ["A. Patent protection duration", "B. How quickly competitors can successfully imitate", "C. The stability of the general environment", "D. Customer loyalty", "E. All of the above"], a: 1 },
+        { q: "74. Which of the following is a definition of rare capabilities?", o: ["A. Capabilities that are costly to imitate", "B. Capabilities few, if any, competitors possess", "C. Capabilities that are non-substitutable", "D. Capabilities that add value", "E. All of the above"], a: 1 },
+        { q: "75. Which of the following allows a firm to exploit their opportunities or to neutralize threats in the external environment?", o: ["A. Rare Capabilities", "B. Costly to Imitate Capabilities", "C. Valuable Capabilities", "D. Non-substitutable Capabilities", "E. Dynamic Capabilities"], a: 2 },
+        { q: "76. Which of the following is a capability that does not have a strategic equivalent?", o: ["A. Unique", "B. Rare", "C. Non-substitutable", "D. Complex", "E. Ambiguous"], a: 2 },
+        { q: "77. Which of the following is a template that firms use to analyze their cost positions?", o: ["A. The Business Model Canvas", "B. The Value Chain", "C. The Five Forces", "D. The Balanced Scorecard", "E. None of the above"], a: 1 },
+        { q: "78. When firms have strong positive relationships with stakeholders they are said to have which of the following?", o: ["A. Relational Capital", "B. Social Capital", "C. Human Capital", "D. Political Capital", "E. Cultural Capital"], a: 1 },
+        { q: "79. The ___________ resources and capabilities are those with the potential to be formed into core competencies.", o: ["A. Strategic", "B. Right (or Internal)", "C. External", "D. Tangible", "E. Intangible"], a: 1 },
+        { q: "80. Why do core rigidities occur?", o: ["A. Lack of investment", "B. Overdependence on a particular core competence", "C. Changes in the external environment", "D. B and C", "E. All of the above"], a: 3 }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let hasAnswered = false;
+    let activeQuestions = [];
+    let wrongQuestions = [];
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const progressEl = document.getElementById("progress");
+    const scoreEl = document.getElementById("score");
+    const nextBtn = document.getElementById("next-btn");
+    const quizBox = document.getElementById("quiz-box");
+    const resultsBox = document.getElementById("results-box");
+    const finalScoreEl = document.getElementById("final-score");
+    const finalStatsEl = document.getElementById("final-stats");
+    const retryWrongBtn = document.getElementById("retry-wrong-btn");
+
+    // Shuffle array using Fisher-Yates algorithm
+    function shuffle(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    function initQuiz(questions) {
+        activeQuestions = shuffle(questions);
+        currentQuestion = 0;
+        score = 0;
+        wrongQuestions = [];
+        scoreEl.innerText = score;
+        quizBox.style.display = "block";
+        resultsBox.style.display = "none";
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = activeQuestions[currentQuestion];
+        questionEl.innerText = q.q;
+        progressEl.innerText = `${currentQuestion + 1} / ${activeQuestions.length}`;
+        optionsEl.innerHTML = "";
+        hasAnswered = false;
+        nextBtn.style.display = "none";
+
+        q.o.forEach((opt, index) => {
+            const btn = document.createElement("button");
+            btn.classList.add("option-btn");
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index, btn);
+            optionsEl.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIndex, btn) {
+        if (hasAnswered) return;
+        hasAnswered = true;
+
+        const currentQ = activeQuestions[currentQuestion];
+        const correctIndex = currentQ.a;
+        const buttons = optionsEl.querySelectorAll(".option-btn");
+
+        if (selectedIndex === correctIndex) {
+            btn.classList.add("correct");
+            score++;
+            scoreEl.innerText = score;
+        } else {
+            btn.classList.add("incorrect");
+            buttons[correctIndex].classList.add("correct");
+            wrongQuestions.push(currentQ);
+        }
+        
+        buttons.forEach(b => b.disabled = true);
+        nextBtn.style.display = "block";
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < activeQuestions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        quizBox.style.display = "none";
+        resultsBox.style.display = "block";
+        const percentage = Math.round((score / activeQuestions.length) * 100);
+        finalScoreEl.innerText = `${percentage}%`;
+        finalStatsEl.innerText = `You got ${score} out of ${activeQuestions.length} correct.`;
+        
+        if (wrongQuestions.length > 0) {
+            retryWrongBtn.style.display = "inline-block";
+            retryWrongBtn.innerText = `Retry Wrong Questions (${wrongQuestions.length})`;
+        } else {
+            retryWrongBtn.style.display = "none";
+        }
+    }
+
+    function restartFull() {
+        initQuiz(quizData);
+    }
+
+    function retryWrong() {
+        if (wrongQuestions.length > 0) {
+            initQuiz(wrongQuestions);
+        }
+    }
+
+    // Start the quiz with shuffled questions
+    initQuiz(quizData);
+</script>
+
+</body>
+</html>

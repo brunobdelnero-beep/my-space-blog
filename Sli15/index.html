@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sli15-13myc Graph</title>
+    <style>
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px;
+        }
+        
+        .graph-container {
+            background: white;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: flex-end;
+            gap: 25px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            padding-right: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-line {
+            width: 20px;
+            height: 2px;
+            background: black;
+            position: relative;
+        }
+        
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .legend-dot.filled {
+            background: black;
+        }
+        
+        .legend-dot.empty {
+            border: 1.5px solid black;
+            background: white;
+        }
+        
+        .graph-svg {
+            overflow: visible;
+        }
+        
+        .x-axis-label {
+            text-align: center;
+            font-size: 11px;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="graph-container">
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-line">
+                    <div class="legend-dot filled"></div>
+                </div>
+                <span>WT</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-line">
+                    <div class="legend-dot empty"></div>
+                </div>
+                <span>Krall</span>
+            </div>
+        </div>
+        
+        <svg class="graph-svg" width="400" height="320" viewBox="0 0 400 320">
+            <!-- Y-axis -->
+            <line x1="60" y1="30" x2="60" y2="260" stroke="black" stroke-width="1.5"/>
+            <!-- X-axis -->
+            <line x1="60" y1="260" x2="380" y2="260" stroke="black" stroke-width="1.5"/>
+            
+            <!-- Y-axis ticks and labels -->
+            <line x1="55" y1="260" x2="60" y2="260" stroke="black" stroke-width="1"/>
+            <text x="48" y="264" font-size="11" text-anchor="end">0</text>
+            
+            <line x1="55" y1="214" x2="60" y2="214" stroke="black" stroke-width="1"/>
+            <text x="48" y="218" font-size="11" text-anchor="end">20</text>
+            
+            <line x1="55" y1="168" x2="60" y2="168" stroke="black" stroke-width="1"/>
+            <text x="48" y="172" font-size="11" text-anchor="end">40</text>
+            
+            <line x1="55" y1="122" x2="60" y2="122" stroke="black" stroke-width="1"/>
+            <text x="48" y="126" font-size="11" text-anchor="end">60</text>
+            
+            <line x1="55" y1="76" x2="60" y2="76" stroke="black" stroke-width="1"/>
+            <text x="48" y="80" font-size="11" text-anchor="end">80</text>
+            
+            <line x1="55" y1="30" x2="60" y2="30" stroke="black" stroke-width="1"/>
+            <text x="48" y="34" font-size="11" text-anchor="end">100</text>
+            
+            <!-- Y-axis label (rotated) -->
+            <text x="18" y="145" font-size="11" text-anchor="middle" transform="rotate(-90, 18, 145)" font-weight="bold">% OF LARGE BUDDED INDEX</text>
+            
+            <!-- X-axis ticks and labels -->
+            <line x1="60" y1="260" x2="60" y2="268" stroke="black" stroke-width="1"/>
+            <text x="60" y="282" font-size="11" text-anchor="middle">0</text>
+            
+            <line x1="105.7" y1="260" x2="105.7" y2="268" stroke="black" stroke-width="1"/>
+            <text x="105.7" y="282" font-size="11" text-anchor="middle">20</text>
+            
+            <line x1="151.4" y1="260" x2="151.4" y2="268" stroke="black" stroke-width="1"/>
+            <text x="151.4" y="282" font-size="11" text-anchor="middle">40</text>
+            
+            <line x1="197.1" y1="260" x2="197.1" y2="268" stroke="black" stroke-width="1"/>
+            <text x="197.1" y="282" font-size="11" text-anchor="middle">60</text>
+            
+            <line x1="242.8" y1="260" x2="242.8" y2="268" stroke="black" stroke-width="1"/>
+            <text x="242.8" y="282" font-size="11" text-anchor="middle">80</text>
+            
+            <line x1="288.5" y1="260" x2="288.5" y2="268" stroke="black" stroke-width="1"/>
+            <text x="288.5" y="282" font-size="11" text-anchor="middle">100</text>
+            
+            <line x1="334.2" y1="260" x2="334.2" y2="268" stroke="black" stroke-width="1"/>
+            <text x="334.2" y="282" font-size="11" text-anchor="middle">120</text>
+            
+            <line x1="380" y1="260" x2="380" y2="268" stroke="black" stroke-width="1"/>
+            <text x="380" y="282" font-size="11" text-anchor="middle">140</text>
+            
+            <!-- 
+            Data point calculations:
+            X: 60 + (time/140) * 320
+            Y: 260 - (value/100) * 230
+            
+            WT data points (from image):
+            0 min: ~5%   -> x=60, y=248.5
+            20 min: ~5%  -> x=105.7, y=248.5
+            40 min: ~78% -> x=151.4, y=80.6
+            60 min: ~48% -> x=197.1, y=149.6
+            80 min: ~28% -> x=242.8, y=195.6
+            100 min: ~22% -> x=288.5, y=209.4
+            120 min: ~18% -> x=334.2, y=218.6
+            140 min: ~12% -> x=380, y=232.4
+            
+            Krall data points (from image):
+            0 min: ~5%   -> x=60, y=248.5
+            20 min: ~8%  -> x=105.7, y=241.6
+            40 min: ~68% -> x=151.4, y=103.6
+            60 min: ~28% -> x=197.1, y=195.6
+            80 min: ~28% -> x=242.8, y=195.6
+            100 min: ~25% -> x=288.5, y=202.5
+            120 min: ~20% -> x=334.2, y=214
+            140 min: ~12% -> x=380, y=232.4
+            -->
+            
+            <!-- WT line (filled circles) -->
+            <polyline 
+                points="60,248.5 105.7,248.5 151.4,80.6 197.1,149.6 242.8,195.6 288.5,209.4 334.2,218.6 380,232.4" 
+                fill="none" 
+                stroke="black" 
+                stroke-width="1.5"/>
+            
+            <!-- WT data points -->
+            <circle cx="60" cy="248.5" r="5" fill="black"/>
+            <circle cx="105.7" cy="248.5" r="5" fill="black"/>
+            <circle cx="151.4" cy="80.6" r="5" fill="black"/>
+            <circle cx="197.1" cy="149.6" r="5" fill="black"/>
+            <circle cx="242.8" cy="195.6" r="5" fill="black"/>
+            <circle cx="288.5" cy="209.4" r="5" fill="black"/>
+            <circle cx="334.2" cy="218.6" r="5" fill="black"/>
+            <circle cx="380" cy="232.4" r="5" fill="black"/>
+            
+            <!-- Krall line (empty circles) -->
+            <polyline 
+                points="60,248.5 105.7,241.6 151.4,103.6 197.1,195.6 242.8,195.6 288.5,202.5 334.2,214 380,232.4" 
+                fill="none" 
+                stroke="black" 
+                stroke-width="1.5"/>
+            
+            <!-- Krall data points -->
+            <circle cx="60" cy="248.5" r="5" fill="white" stroke="black" stroke-width="1.5"/>
+            <circle cx="105.7" cy="241.6" r="5" fill="white" stroke="black" stroke-width="1.5"/>
+            <circle cx="151.4" cy="103.6" r="5" fill="white" stroke="black" stroke-width="1.5"/>
+            <circle cx="197.1" cy="195.6" r="5" fill="white" stroke="black" stroke-width="1.5"/>
+            <circle cx="242.8" cy="195.6" r="5" fill="white" stroke="black" stroke-width="1.5"/>
+            <circle cx="288.5" cy="202.5" r="5" fill="white" stroke="black" stroke-width="1.5"/>
+            <circle cx="334.2" cy="214" r="5" fill="white" stroke="black" stroke-width="1.5"/>
+            <circle cx="380" cy="232.4" r="5" fill="white" stroke="black" stroke-width="1.5"/>
+        </svg>
+        
+        <div class="x-axis-label">TIME AFTER G1 ARREST (MIN)</div>
+    </div>
+</body>
+</html>
